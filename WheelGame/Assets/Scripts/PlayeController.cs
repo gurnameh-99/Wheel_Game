@@ -4,16 +4,39 @@ using UnityEngine;
 
 public class PlayeController : MonoBehaviour
 {
-    public CharacterController controller;
-    public float moveSpeed = 5f;
-    public float turnSpeed = 20f;
-    
-    private Vector3 direction = new Vector3(0f,0f,1f);
+    public Rigidbody rb;
+    public float max_speed;
+    public float torque;
+    private Vector3 change;
 
-    // Update is called once per frame
-    void Update()
+
+    void Start()
     {
-        controller.Move(direction * moveSpeed * Time.deltaTime);
-        transform.Rotate(new Vector3(100, 0, 0) * Time.deltaTime);
+        /*game = GetComponent<GameObject>();*/
+        rb = GetComponent<Rigidbody>();
+        change = new Vector3(0f, 0.1f, 0.1f);
+    }
+
+    void FixedUpdate()
+    {
+        float speed = rb.velocity.sqrMagnitude;
+        if(speed < max_speed)
+        {
+            rb.AddTorque(transform.right * torque);
+        }
+        if (Input.GetButton("Jump"))
+        {
+            if (gameObject.transform.localScale.y < 2.5)
+            {
+                gameObject.transform.localScale += change;
+                gameObject.transform.localPosition += new Vector3(0f, 0.2f, 0f);
+            }
+        }
+        else
+        {
+            gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            
+        }
+        
     }
 }
